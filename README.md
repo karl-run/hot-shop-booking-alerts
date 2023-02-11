@@ -6,4 +6,4 @@ Simple script that checks booking availability of Oslo based restaurant [Hot Sho
 
 ## Code
 
-This script uses [Deno](https://deno.land/), the entry point is [mod.ts](./mod.ts). Code is bundled to speed up the [Github Action cron-job](./.github/workflows/cron.yml) that runs every 7 minutes.
+This script uses [Deno](https://deno.land/), the entry point is [mod.ts](./src/mod.ts). Code is bundled to speed up the [Github Action cron-job](./.github/workflows/cron.yml) that runs every 7 minutes.

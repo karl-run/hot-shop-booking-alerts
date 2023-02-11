@@ -5922,7 +5922,7 @@ function wrapYearMonthTuple(month) {
         ];
     }
 }
-const availabilityPerMonth = await Promise.all(Q(getMonthRange(), O(wrapYearMonthTuple), O(getAvailabilityForMonth), (it)=>it));
+const availabilityPerMonth = await Promise.all(Q(getMonthRange(), O(wrapYearMonthTuple), O(getAvailabilityForMonth)));
 const availability = Q(availabilityPerMonth, _1((it)=>it.data.length > 0), R((availability)=>availability.data.map((day)=>`${day.date}. ${getMonthName(availability.month)} har ledige bord på Hot Shop!`)));
 if (availability.length > 0) {
     await postToSlack(availability);

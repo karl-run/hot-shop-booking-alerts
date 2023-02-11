@@ -1,4 +1,4 @@
-import { pipe, map, flatMap, filter } from "./deps.ts";
+import { filter, flatMap, map, pipe } from "./deps.ts";
 import { postToSlack } from "./slack.ts";
 import { getAvailabilityForMonth } from "./hot-shop.ts";
 import { getMonthName, getMonthRange, wrapYearMonthTuple } from "./time.ts";
@@ -8,7 +8,7 @@ const availabilityPerMonth = await Promise.all(
     getMonthRange(),
     map(wrapYearMonthTuple),
     map(getAvailabilityForMonth),
-  )
+  ),
 );
 
 const availability: string[] = pipe(
@@ -17,11 +17,13 @@ const availability: string[] = pipe(
   flatMap((availability) =>
     availability.data.map(
       (day) =>
-        `${day.date}. ${getMonthName(
-          availability.month
-        )} har ledige bord på Hot Shop!`
+        `${day.date}. ${
+          getMonthName(
+            availability.month,
+          )
+        } har ledige bord på Hot Shop!`,
     )
-  )
+  ),
 );
 
 if (availability.length > 0) {

@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.174.0/"
+  },
+  "tasks": {
+    "bundle": "deno bundle src/mod.ts bin/hot-shop.js"
+  },
+  "fmt": {
+    "files": {
+      "include": ["src/"]
+    }
+  }
+}

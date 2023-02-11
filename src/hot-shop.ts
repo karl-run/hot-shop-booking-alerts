@@ -16,7 +16,7 @@ export async function getAvailabilityForMonth([
 
   if (!response.ok) {
     console.error(
-      `Failed to fetch availability for ${year}-${month}: ${response.status} ${response.statusText}`
+      `Failed to fetch availability for ${year}-${month}: ${response.status} ${response.statusText}`,
     );
     return {
       year,
@@ -30,7 +30,7 @@ export async function getAvailabilityForMonth([
     month,
     data: filter(
       (await response.json()).data as ResponseData[],
-      (it) => it.available
+      (it) => it.available,
     ),
   };
 }

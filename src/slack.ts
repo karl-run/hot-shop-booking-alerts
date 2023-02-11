@@ -51,7 +51,8 @@ function slackBody(lines: string[]) {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "Gå til booking: https://hotshop.superbexperience.com/reserve/guests",
+          text:
+            "Gå til booking: https://hotshop.superbexperience.com/reserve/guests",
         },
       },
     ],
