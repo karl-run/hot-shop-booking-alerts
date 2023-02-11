@@ -5870,10 +5870,7 @@ function slackBody(lines) {
         ]
     };
 }
-function createUrl(year, month) {
-    return `https://api-gx.superbexperience.com/availability/dates?restaurant=5ba3a4d66c8c209e5510a1bc&online=true&month=${month}&year=${year}&guests=2`;
-}
-async function getAvailabilityForMonth(year, month) {
+async function getAvailabilityForMonth([year, month]) {
     console.info(`Checking for month ${month} in ${year}`);
     const response = await fetch(createUrl(year, month));
     if (!response.ok) {
@@ -5889,6 +5886,9 @@ async function getAvailabilityForMonth(year, month) {
         month,
         data: _1((await response.json()).data, (it)=>it.available)
     };
+}
+function createUrl(year, month) {
+    return `https://api-gx.superbexperience.com/availability/dates?restaurant=5ba3a4d66c8c209e5510a1bc&online=true&month=${month}&year=${year}&guests=2`;
 }
 const MONTHS = [
     "januar",
@@ -5907,23 +5907,27 @@ const MONTHS = [
 const now = new Date();
 const currentMonth = Yi(now);
 const currentYear = Ui(now);
-const monthsRange = jr1(currentMonth, currentMonth + 4);
-const monthResults = await Promise.all(Q(monthsRange, O((it)=>{
-    if (it > 11) {
+const getMonthRange = ()=>jr1(currentMonth, currentMonth + 4);
+const getMonthName = (month)=>MONTHS[month];
+function wrapYearMonthTuple(month) {
+    if (month > 11) {
         return [
             currentYear + 1,
-            it % 11
+            month % 11
         ];
     } else {
         return [
             currentYear,
-            it
+            month
         ];
     }
-}), O(([year, month])=>getAvailabilityForMonth(year, month))));
-const availability = Q(monthResults, _1((it)=>it.data.length > 0));
+}
+const availabilityPerMonth = await Promise.all(Q(getMonthRange(), O(wrapYearMonthTuple), O(getAvailabilityForMonth), (it)=>it));
+const availability = Q(availabilityPerMonth, _1((it)=>it.data.length > 0), R((availability)=>availability.data.map((day)=>`${day.date}. ${getMonthName(availability.month)} har ledige bord på Hot Shop!`)));
 if (availability.length > 0) {
-    await postToSlack(R(availability, (it)=>it.data.map((day)=>`${day.date}. ${MONTHS[it.month]} har ledige bord på Hot Shop!`)));
+    await postToSlack(availability);
+    console.info("Availability found, posted to Slack");
+    Deno.exit(0);
 } else {
     console.info("No availability found");
     Deno.exit(0);

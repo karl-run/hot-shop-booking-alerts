@@ -1,19 +1,14 @@
 import { filter } from "./deps.ts";
-
-type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+import { YearMonthTuple } from "./time.ts";
 
 type ResponseData = { date: string; available: boolean };
 
-function createUrl(year: number, month: Month) {
-  return `https://api-gx.superbexperience.com/availability/dates?restaurant=5ba3a4d66c8c209e5510a1bc&online=true&month=${month}&year=${year}&guests=2`;
-}
-
-export async function getAvailabilityForMonth(
-  year: number,
-  month: Month
-): Promise<{
+export async function getAvailabilityForMonth([
+  year,
+  month,
+]: YearMonthTuple): Promise<{
   year: number;
-  month: Month;
+  month: number;
   data: ResponseData[];
 }> {
   console.info(`Checking for month ${month} in ${year}`);
@@ -38,4 +33,8 @@ export async function getAvailabilityForMonth(
       (it) => it.available
     ),
   };
+}
+
+function createUrl(year: number, month: number) {
+  return `https://api-gx.superbexperience.com/availability/dates?restaurant=5ba3a4d66c8c209e5510a1bc&online=true&month=${month}&year=${year}&guests=2`;
 }
