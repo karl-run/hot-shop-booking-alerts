@@ -1,9 +1,9 @@
-const SLACK_HOOK = Deno.env.get("SLACK_HOOK");
+const SLACK_HOOK = process.env["SLACK_HOOK"];
 
 export async function postToSlack(lines: string[]) {
   if (!SLACK_HOOK) {
     console.error("No SLACK_HOOK set");
-    Deno.exit(1);
+    process.exit(1);
   }
 
   const slackResult = await fetch(SLACK_HOOK, {
