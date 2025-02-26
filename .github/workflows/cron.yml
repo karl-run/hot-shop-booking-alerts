@@ -1,15 +1,13 @@
 name: 5-minutely-cron
 on:
   schedule:
-    - cron: "*/7 * * * *"
+    - cron: '*/7 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-      - run: deno run --allow-net --allow-env bin/hot-shop.js
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun run src/index.ts
         env:
           SLACK_HOOK: ${{ secrets.SLACK_HOOK }}
