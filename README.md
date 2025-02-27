@@ -8,7 +8,5 @@ any tables available.
 
 ## Code
 
-This script uses [Deno](https://deno.land/), the entry point is
-[mod.ts](./src/index.ts). Code is bundled to speed up the
-[Github Action cron-job](./.github/workflows/cron.yml) that runs every 7
-minutes.
+This script uses [Bun](https://bun.sh/), the entry point is
+[src/index.ts](./src/index.ts).
