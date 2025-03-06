@@ -12,7 +12,7 @@ const availability: string[] = pipe(
   filter((it) => it.data.length > 0),
   flatMap((availability) =>
     availability.data.map(
-      (day) => `${day.date}. ${getMonthName(availability.month)} har ledige bord for 4 personer på Hot Shop!`,
+      (day) => `${day.date}. ${getMonthName(availability.month)} har ledige bord for ${Bun.env.GUESTS ?? "4"} personer på Hot Shop!`,
     ),
   ),
 )

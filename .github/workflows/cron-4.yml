@@ -1,0 +1,14 @@
+name: 5-minutely-cron 4 guests
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/7 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun run src/index.ts
+        env:
+          SLACK_HOOK: ${{ secrets.SLACK_HOOK }}

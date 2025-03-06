@@ -1,4 +1,4 @@
-name: 5-minutely-cron
+name: 5-minutely-cron 5 guests
 on:
   workflow_dispatch:
   schedule:
@@ -11,4 +11,5 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun run src/index.ts
         env:
+          GUESTS: 5
           SLACK_HOOK: ${{ secrets.SLACK_HOOK }}

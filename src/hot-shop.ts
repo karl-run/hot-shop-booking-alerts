@@ -11,7 +11,7 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
   month: number
   data: ResponseData[]
 }> {
-  console.info(`Checking for month ${month} in ${year}`)
+  console.info(`Checking for month ${month} in ${year} for ${Bun.env.GUESTS ?? '4'} guests`)
   const challenge = await generateChallenge(restaurantId)
   const response = await fetch(createUrl(year, month), {
     headers: {
@@ -45,5 +45,5 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
 }
 
 function createUrl(year: number, month: number) {
-  return `https://api-gx.superbexperience.com/availability/dates?restaurant=${restaurantId}&online=true&month=${month}&year=${year}&guests=4`
+  return `https://api-gx.superbexperience.com/availability/dates?restaurant=${restaurantId}&online=true&month=${month}&year=${year}&guests=${Bun.env.GUESTS ?? '4'}`
 }
