@@ -21,7 +21,7 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
       // Not required, but is just the current date
       'x-latency': Date.now().toString(),
       // Not required, probably a fun easter egg for anyone trying to crack the challenge
-      'x-honey-pot': 'i-also-see-you!',
+      'x-honey-pot': "can't we just be friends?",
       // Required, instantly gives 403 if missing
       'User-Agent':
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
@@ -35,6 +35,11 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
       month,
       data: [],
     }
+  }
+
+  if (response.redirected) {
+    console.error(`Seems like we hit honeypot, was redirected, URL is ${response.url}`)
+    process.exit(1)
   }
 
   return {
