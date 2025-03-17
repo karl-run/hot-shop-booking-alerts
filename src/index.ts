@@ -2,6 +2,7 @@ import { filter, flatMap, map, pipe } from 'remeda'
 import { postToSlack } from './slack'
 import { getAvailabilityForMonth } from './hot-shop'
 import { getMonthName, getMonthRange, wrapYearMonthTuple } from './time'
+import { appendGha } from './gha.ts'
 
 const availabilityPerMonth = await Promise.all(
   pipe(getMonthRange(), map(wrapYearMonthTuple), map(getAvailabilityForMonth)),
@@ -12,16 +13,24 @@ const availability: string[] = pipe(
   filter((it) => it.data.length > 0),
   flatMap((availability) =>
     availability.data.map(
-      (day) => `${day.date}. ${getMonthName(availability.month)} har ledige bord for ${Bun.env.GUESTS ?? "4"} personer på Hot Shop!`,
+      (day) =>
+        `${day.date}. ${getMonthName(availability.month)} har ledige bord for ${Bun.env.GUESTS ?? '4'} personer på Hot Shop!`,
     ),
   ),
 )
 
 if (availability.length > 0) {
   await postToSlack(availability)
+
   console.info('Availability found, posted to Slack')
+
+  await appendGha('No problems found', `Availability (${availability.length}) found`)
+
   process.exit(0)
 } else {
   console.info('No availability found')
+
+  await appendGha('No problems found', 'No availability found')
+
   process.exit(0)
 }
