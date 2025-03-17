@@ -48,10 +48,19 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
     process.exit(1)
   }
 
-  return {
-    year,
-    month,
-    data: filter((await response.json()).data as ResponseData[], (it) => it.available),
+  const body = await response.json()
+  try {
+    return {
+      year,
+      month,
+      data: filter(body.data as ResponseData[], (it) => it.available),
+    }
+  } catch (e) {
+    console.error('Funky response caused filtering to fail, body is:', body)
+
+    await appendGha('Failed because of funky response', `Funky response for ${year}-${month}: ${JSON.stringify(body)}`)
+
+    throw new Error('Weird filter/parsing error', { cause: e })
   }
 }
 
