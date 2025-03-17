@@ -1,6 +1,7 @@
 import { filter } from 'remeda'
-import { YearMonthTuple } from './time'
+import { getMonthName, YearMonthTuple } from './time'
 import { generateChallenge } from './anti-honeypot.ts'
+import { appendGha } from './gha.ts'
 
 const restaurantId = '5ba3a4d66c8c209e5510a1bc'
 
@@ -30,15 +31,20 @@ export async function getAvailabilityForMonth([year, month]: YearMonthTuple): Pr
 
   if (!response.ok) {
     console.error(`Failed to fetch availability for ${year}-${month}: ${response.status} ${response.statusText}`)
-    return {
-      year,
-      month,
-      data: [],
-    }
+
+    await appendGha(
+      'Failed because of response',
+      `${getMonthName(month)} (${year}) failed with ${response.status} ${response.statusText}`,
+    )
+
+    process.exit(1)
   }
 
   if (response.redirected) {
     console.error(`Seems like we hit honeypot, was redirected, URL is ${response.url}`)
+
+    await appendGha('Failed because of honeypot', `Honeypot hit, redirected to ${response.url}`)
+
     process.exit(1)
   }
 
